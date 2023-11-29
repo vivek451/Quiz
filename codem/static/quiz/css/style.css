@@ -1,0 +1,79 @@
+/* Add this CSS to your existing or a new CSS file */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+}
+
+.quiz-form-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="radio"] {
+  margin-right: 5px;
+}
+
+fieldset {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+legend {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.quiz-option {
+  display: block;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.quiz-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+
+.quiz-header h1 {
+  font-family: 'Georgia', serif;
+  font-size: 36px;
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.quiz-header p {
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+  color: #555;
+  color: #007bff; /* Blue color */
+}
