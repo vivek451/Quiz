@@ -25,7 +25,7 @@
                 <br>
                 <div v-show="currentPage===1" class="form-group">
                     <label for="name">Your Name:</label>
-                    <input v-model="name" type="text" name="name" class="form-control" required>
+                    <input v-model="name" type="text" name="name" class="form-control">
                 </div>
 
                 <div v-for="question in questions" :key="question.id">

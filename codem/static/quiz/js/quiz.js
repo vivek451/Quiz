@@ -31,9 +31,9 @@ var quiz_container = new Vue({
                 this.currentPage--;
             }
         }, nextPage() {
-            if (!this.username || !this.username.trim()) {
+            /*if (!this.username || !this.username.trim()) {
                 alert("Please fill in your name before proceeding.");
-            } else if (this.currentPage < this.totalPages) {
+            } else */if (this.currentPage < this.totalPages) {
                 this.currentPage++;
             }
         },
