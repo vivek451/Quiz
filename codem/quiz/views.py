@@ -39,7 +39,7 @@ def quiz(request):
                     # get the question instance and save with updated response
                     question = Question.objects.get(pk=int(question_id.split('_')[1]))
 
-                    quiz_instance = Quiz(question=question, response_id=response)
+                    quiz_instance = Quiz(question=question, response_id=response, user=user)
                     quiz_instance.save()
 
                     total_score += int(quiz_instance.response.value)

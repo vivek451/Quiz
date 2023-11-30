@@ -4,7 +4,7 @@ from django.db import models
 
 # Create your models here.
 class Option(models.Model):
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=250)
     value = models.CharField(max_length=100)
 
     def __str__(self):
@@ -12,7 +12,7 @@ class Option(models.Model):
 
 
 class Question(models.Model):
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=250)
     options = models.ManyToManyField(Option)
 
     def __str__(self):
