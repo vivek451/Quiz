@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Social Isolation Quiz - King Fahd University{% endblock %}
+
+{% block content %}
+
+ <div id="quiz-container">
+        <div class="quiz-header">
+            <h1>Quiz results </h1>
+        </div>
+     <div class="quiz-form-container">
+          <p>{{ result }}</p>
+       {% if https_link %}
+         <a href= "{{ https_link }}" target="_blank">
+            <p>Watch this video</p>
+         </a>
+       {% endif %}
+
+            <form action="{% url 'quiz' %}" method="get">
+                <button type="submit">Go back</button>
+            </form>
+     </div>
+ </div>
+{% endblock %}

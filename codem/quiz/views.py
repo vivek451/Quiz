@@ -3,7 +3,7 @@ from django.db.models import Choices
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import viewsets
-
+import re
 from .models import Quiz, UserProfile, Question, Option
 from .serializers import QuestionSerializer
 
@@ -19,7 +19,13 @@ def quiz(request):
         (0, 2, "You are an excellent social person and you spend time with your community.\n "
                "Continue at this level and make sure that you are with good people who are supporting to you."),
         (3, 5, "You are vulnerable to social isolation, and to avoid it, you must work to organize your time.\n "
-               "Watch this video about time management"),
+               "Watch this video about time management- https://youtu.be/VpQn48MV1Js?si=Tmi2p3O93svbBn6U"),
+        (6, 8, "You are socially isolated and this could be due to personal reasons.\n "
+               "You must know the importance of public relations at university and that it also benefits you after university.\n"
+               "Watch this video on how to develop your relationship with those around you - https://youtu.be/lB2mmk-kirc?si=kZ2fZUrvzHJPWBVK"),
+        (9, 20,
+         "You are a socially isolated person, and this could be due to psychological reasons such as stress or the onset of depression\n"
+         "You can contact the psychologists at the university and request advice from them. You can get an appointment via this link.- https://irshad.kfupm.edu.sa/ar/refer-himself")
     ]
     if request.method == 'POST':
         # import pdb; pdb.set_trace()
@@ -53,7 +59,16 @@ def quiz(request):
 
         # Determine the result based on total_score
         result = get_result(total_score, result_range)
-        return render(request, 'quiz_results.html', {'result': result})
+
+        context = {'result': result}
+        # import pdb; pdb.set_trace()
+        https_link_match = re.search(r'https://[^\s]+', result)
+        https_link = https_link_match.group() if https_link_match else None
+
+        if https_link:
+            context['https_link'] = https_link
+
+        return render(request, 'quiz_results.html', context)
         # return redirect('quiz_results')
         return HttpResponse("The view is processed successfully")
 
