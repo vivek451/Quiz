@@ -1,29 +1,39 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.db.models import Choices
 from django.http import HttpResponse
-from .models import Quiz, UserProfile
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import ListView
+from django.shortcuts import render
+from rest_framework import viewsets
+import re
+from .models import Quiz, UserProfile, Question, Option
+from .serializers import QuestionSerializer
+
+
+class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Question.objects.all().order_by('pk')
+    serializer_class = QuestionSerializer
 
 
 # Create your views here.
 def quiz(request):
-    # Assuming you want 10 quizzes per page, adjust as needed
-    quizzes_per_page = 1
-
     result_range = [
         (0, 2, "You are an excellent social person and you spend time with your community.\n "
                "Continue at this level and make sure that you are with good people who are supporting to you."),
         (3, 5, "You are vulnerable to social isolation, and to avoid it, you must work to organize your time.\n "
-               "Watch this video about time management"),
-        ]
+               "Watch this video about time management- https://youtu.be/VpQn48MV1Js?si=Tmi2p3O93svbBn6U"),
+        (6, 8, "You are socially isolated and this could be due to personal reasons.\n "
+               "You must know the importance of public relations at university and that it also benefits you after university.\n"
+               "Watch this video on how to develop your relationship with those around you - https://youtu.be/lB2mmk-kirc?si=kZ2fZUrvzHJPWBVK"),
+        (9, 20,
+         "You are a socially isolated person, and this could be due to psychological reasons such as stress or the onset of depression\n"
+         "You can contact the psychologists at the university and request advice from them. You can get an appointment via this link.- https://irshad.kfupm.edu.sa/ar/refer-himself")
+    ]
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         user_name = request.POST.get('name')
         total_score = 0
 
         # Get or create UserProfile for the provided username
-        user, created = User.objects.get_or_create(username='VIVEK'.lower())
+        user, created = User.objects.get_or_create(username=user_name or 'VIVEK'.lower())
         user_profile, created = UserProfile.objects.get_or_create(user=user)
 
         # Delete previous quiz responses for the user
@@ -33,11 +43,12 @@ def quiz(request):
             if question_id.startswith('question_'):
                 try:
                     # get the question instance and save with updated response
-                    question_instance = Quiz.objects.get(pk=int(question_id.split('_')[1]))
-                    question_instance.response = response
-                    question_instance.save()
+                    question = Question.objects.get(pk=int(question_id.split('_')[1]))
 
-                    total_score += int(response)
+                    quiz_instance = Quiz(question=question, response_id=response, user=user)
+                    quiz_instance.save()
+
+                    total_score += int(quiz_instance.response.value)
 
                 except Quiz.DoesNotExist:
                     pass
@@ -48,25 +59,20 @@ def quiz(request):
 
         # Determine the result based on total_score
         result = get_result(total_score, result_range)
-        return render(request, 'quiz_results.html', {'result': result})
+
+        context = {'result': result}
+        # import pdb; pdb.set_trace()
+        https_link_match = re.search(r'https://[^\s]+', result)
+        https_link = https_link_match.group() if https_link_match else None
+
+        if https_link:
+            context['https_link'] = https_link
+
+        return render(request, 'quiz_results.html', context)
         # return redirect('quiz_results')
         return HttpResponse("The view is processed successfully")
 
-    # Fetch all the questions from Quiz order by id
-    quizzes = Quiz.objects.all().order_by('id')
-
-    # Paginate the quizzes
-    paginator = Paginator(quizzes, quizzes_per_page)
-    page = request.GET.get('page', 1)
-
-    try:
-        quizzes = paginator.page(page)
-    except PageNotAnInteger:
-        quizzes = paginator.page(1)
-    except EmptyPage:
-        quizzes = paginator.page(paginator.num_pages)
-
-    return render(request, 'quiz.html', {'quizzes': quizzes})
+    return render(request, 'quiz2.html', {})
 
 
 def get_result(total_score, result_range):
