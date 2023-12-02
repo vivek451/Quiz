@@ -10,10 +10,12 @@
             <h1>Quiz results </h1>
         </div>
      <div class="quiz-form-container">
-          <p>{{ result }}</p>
+         <p><b><span style="font-size: larger;">{{ bold_words }}</span></b></p>
+         <p> {{ other_words }}</p>
+
        {% if https_link %}
          <a href= "{{ https_link }}" target="_blank">
-            <p>Watch this video</p>
+            <p>{{ word_suggestion }}</p>
          </a>
 
        {% endif %}

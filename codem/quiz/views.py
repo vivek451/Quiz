@@ -16,16 +16,20 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 # Create your views here.
 def quiz(request):
     result_range = [
-        (0, 2, "You are an excellent social person and you spend time with your community.\n "
+        (0, 2, "You are an excellent social person, and you spend time with your community."
                "Continue at this level and make sure that you are with good people who are supporting to you."),
-        (3, 5, "You are vulnerable to social isolation, and to avoid it, you must work to organize your time.\n "
+        (3, 5, "You are vulnerable to social isolation, and to avoid it, you must work to organize your time."
                "Watch this video about time management- https://youtu.be/VpQn48MV1Js?si=Tmi2p3O93svbBn6U"),
-        (6, 8, "You are socially isolated and this could be due to personal reasons.\n "
-               "You must know the importance of public relations at university and that it also benefits you after university.\n"
-               "Watch this video on how to develop your relationship with those around you - https://youtu.be/lB2mmk-kirc?si=kZ2fZUrvzHJPWBVK"),
+        (6, 8, "You are socially isolated, and this could be due to personal reasons."
+               "You must know the importance of public relations at university and that it also benefits you after "
+               "university. "
+               "Watch this video on how to develop your relationship with those around you - "
+               "https://youtu.be/lB2mmk-kirc?si=kZ2fZUrvzHJPWBVK"),
         (9, 20,
-         "You are a socially isolated person, and this could be due to psychological reasons such as stress or the onset of depression\n"
-         "You can contact the psychologists at the university and request advice from them. You can get an appointment via this link.- https://irshad.kfupm.edu.sa/ar/refer-himself")
+         "You are a socially isolated person, and this could be due to psychological reasons such as stress or the "
+         "onset of depression "
+         "You can contact the psychologists at the university and request advice from them. You can get an "
+         "appointment via this link.- https://irshad.kfupm.edu.sa/ar/refer-himself")
     ]
     if request.method == 'POST':
         # import pdb; pdb.set_trace()
@@ -65,12 +69,22 @@ def quiz(request):
         https_link_match = re.search(r'https://[^\s]+', result)
         https_link = https_link_match.group() if https_link_match else None
 
-        if https_link:
+        if https_link and 'youtu.be' in https_link:
             context['https_link'] = https_link
+            context['word_suggestion'] = 'watch the video'
+        else:
+            context['https_link'] = https_link
+            context['word_suggestion'] = 'open this link'
+
+        # split results and get the bold words and join the username
+        list_of_words = result.split(",")
+        bold_words, other_words = list_of_words[0], list_of_words[1]
+        bold_words = user_name + ' ' + bold_words
+
+        context['bold_words'] = bold_words
+        context['other_words'] = other_words
 
         return render(request, 'quiz_results.html', context)
-        # return redirect('quiz_results')
-        return HttpResponse("The view is processed successfully")
 
     return render(request, 'quiz2.html', {})
 
