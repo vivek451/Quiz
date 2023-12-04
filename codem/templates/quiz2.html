@@ -25,14 +25,14 @@
                 <br>
                 <div v-show="currentPage===1" class="form-group">
                     <label for="name">Your Name:</label>
-                    <input v-model="name" type="text" name="name" class="form-control">
+                    <input v-model="name" type="text" name="name" class="form-control" required>
                 </div>
 
                 <div v-for="question in questions" :key="question.id">
                     <fieldset v-show="isQuestionVisible(question)">
                         <legend class="text-center">[[ question.description ]]</legend>
                         <label class="quiz-option" v-for="option in question.choices">
-                            <input type="radio" :name="'question_'+question.id" :value="option.id">
+                            <input type="radio" :name="'question_'+question.id" :value="option.id" required>
                             [[ option.description ]]
                         </label>
                     </fieldset>

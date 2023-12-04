@@ -15,6 +15,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 
 # Create your views here.
 def quiz(request):
+    # import pdb; pdb.set_trace()
     result_range = [
         (0, 2, "You are an excellent social person, and you spend time with your community."
                "Continue at this level and make sure that you are with good people who are supporting to you."),
