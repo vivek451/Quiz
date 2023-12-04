@@ -1,4 +1,4 @@
-from codem.settings import *
+from codem.codem.settings import *
 import os
 import dj_database_url
 
