@@ -20,19 +20,22 @@
 
         <div v-if="!isLoading" class="quiz-form-container" id="quiz-container">
             <form method="post" action="{% url 'quiz' %}">
+                <div v-if="!form.isValid" class="alert alert-danger text-center p-2" role="alert">
+                    [[ form.message ]]
+                </div>
                 {% csrf_token %}
 
                 <br>
                 <div v-show="currentPage===1" class="form-group">
                     <label for="name">Your Name:</label>
-                    <input v-model="name" type="text" name="name" class="form-control">
+                    <input v-model="form_data.name" type="text" name="name" class="form-control">
                 </div>
 
                 <div v-for="question in questions" :key="question.id">
-                    <fieldset v-show="isQuestionVisible(question)">
+                    <fieldset v-show="isQuestionVisible(question)" class="form-group">
                         <legend class="text-center">[[ question.description ]]</legend>
                         <label class="quiz-option" v-for="option in question.choices">
-                            <input type="radio" :name="'question_'+question.id" :value="option.id">
+                            <input type="radio" :name="'question_'+question.id" :value="option.id" v-model="question.response">
                             [[ option.description ]]
                         </label>
                     </fieldset>

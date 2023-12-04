@@ -4,7 +4,14 @@ var quiz_container = new Vue({
         questions: [],
         quizzesPerPage: 1, //# Assuming you want 10 quizzes per page, adjust as needed
         currentPage: 1, isLoading: true,
-        username: null
+        name: null,
+        form: {
+            isValid: true,
+            message: null,
+        },
+        form_data: {
+            name: null,
+        }
     }, computed: {
         paginatedQuestions() {
             const startIndex = (this.currentPage - 1) * this.quizzesPerPage;
@@ -31,15 +38,33 @@ var quiz_container = new Vue({
                 this.currentPage--;
             }
         }, nextPage() {
-            /*if (!this.username || !this.username.trim()) {
-                alert("Please fill in your name before proceeding.");
-            } else */if (this.currentPage < this.totalPages) {
+            if (this.validateForm() && this.currentPage < this.totalPages) {
                 this.currentPage++;
             }
         },
         isQuestionVisible(question) {
             return this.paginatedQuestions.includes(question)
         },
+        validateForm() {
+            this.form.isValid = true;
+            this.form.message = null;
+            if (!this.form_data.name || !this.form_data.name.trim()) {
+                this.form.isValid = false
+                this.form.message = "Please fill in your name before proceeding."
+                alert(this.form.message);
+                return false;
+            }
+            for (const question of this.paginatedQuestions) {
+                if (!question.response) {
+                    this.form.isValid = false;
+                    this.form.message = `Please answer all questions in this page.`;
+                    alert(this.form.message);
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
 });
